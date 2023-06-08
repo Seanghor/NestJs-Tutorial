@@ -9,7 +9,7 @@ export class AuditoriumController {
 
   @Post()
   create(@Body() createAuditoriumDto: CreateAuditoriumDto) {
-    return this.auditoriumService.create(createAuditoriumDto);
+    return this.auditoriumService.create();
   }
 
   @Get()
@@ -24,7 +24,7 @@ export class AuditoriumController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAuditoriumDto: UpdateAuditoriumDto) {
-    return this.auditoriumService.update(+id, updateAuditoriumDto);
+    return this.auditoriumService.update(+id);
   }
 
   @Delete(':id')

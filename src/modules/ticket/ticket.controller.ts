@@ -9,7 +9,7 @@ export class TicketController {
 
   @Post()
   create(@Body() createTicketDto: CreateTicketDto) {
-    return this.ticketService.create(createTicketDto);
+    return this.ticketService.create();
   }
 
   @Get()
@@ -24,7 +24,7 @@ export class TicketController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketService.update(+id, updateTicketDto);
+    return this.ticketService.update(+id);
   }
 
   @Delete(':id')
