@@ -1,0 +1,35 @@
+version: "3.9"
+name: ccp_web_demo
+
+
+services:
+  # db:
+  #   image: postgres:14.3-alpine
+  #   container_name: postgres-sbs-db
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: sbs
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: sbs_db
+  #   expose:
+  #     - "5438"
+  #   ports:
+  #     - "5438:5438"
+  #   command: -p 5438
+  #   networks:
+  #     - sbs-network
+  #   volumes:
+  #     - ./backup/backup.sql:/docker-entrypoint-initdb.d/dummy_dump.sql
+  web:
+    image: ccp_web
+    container_name: ccp_web_demo
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file: ./.env
+    ports:
+      - "5555:${PORT}"
+    command: yarn start:dev
+

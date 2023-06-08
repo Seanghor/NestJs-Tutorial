@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // postgresql://postgres:hor123@localhost:5432/cloud_demo
+  url      = "postgresql://postgres:hor123@localhost:5432/cloud_demo"
+  // url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  ADMIN
+  USER
+  EMPLOYEE 
+}
+
+enum MovieStatus {
+  COMING_SOON
+  NOW_SHOWING
+  END_SHOWING
+}
+
+enum ScreeningStatus {
+  COMING_SOON
+  NOW_SHOWING
+  END_SHOWING
+}
+
+model Campus {
+  id      Int    @id @default(autoincrement())
+  name    String
+  address String
+  phone   String
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String?
+  password  String
+  role      UserType  @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  Ticket    Ticket[]
+}
+
+model Movie {
+  id           Int         @id @default(autoincrement())
+  title        String
+  image        String?
+  description  String?
+  duration_min Int
+  rating       Float
+  price        Float?
+  status       MovieStatus
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime?   @updatedAt
+  Screening    Screening[]
+}
+
+model Auditorium {
+  id        Int         @id @default(autoincrement())
+  name      String
+  num_seats Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @updatedAt
+  Screening Screening[]
+}
+
+model Screening {
+  id           Int             @id @default(autoincrement())
+  movie        Movie           @relation(fields: [movieId], references: [id])
+  auditorium   Auditorium      @relation(fields: [auditoriumId], references: [id])
+  movieId      Int
+  auditoriumId Int
+  startTime    DateTime
+  endTime      DateTime?
+  status       ScreeningStatus
+  isAvailable  Boolean
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime?       @updatedAt
+  Ticket       Ticket[]
+}
+
+model Ticket {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  screening   Screening @relation(fields: [screeningId], references: [id])
+  userId      Int
+  screeningId Int
+  seat        String
+  price       Float
+  paid        Boolean
+  active      Boolean
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+}
