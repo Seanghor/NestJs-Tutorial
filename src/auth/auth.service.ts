@@ -1,24 +1,41 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  create() {
-    return 'This action adds a new auth';
+  constructor(private prisma: PrismaService) { }
+
+  // used when we create a refresh token.
+  async addRefreshTokenToWhitelist({ jti, refreshToken, userId }) {
+    return await this.prisma.refreshToken.create({
+      data: {
+        id: jti,
+        hashedToken: refreshToken(refreshToken),
+        userId,
+      }
+    })
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  // used to check if the token sent by the client is in the database.
+  async findRefreshTokenById(id: string) {
+    return await this.prisma.refreshToken.findUnique({
+      where: { id }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  // soft delete tokens after usage.
+  async deleteRefreshTokenById(id: string) {
+    return await this.prisma.refreshToken.delete({
+      where:{id}
+    })
   }
 
-  update(id: number) {
-    return `This action updates a #${id} auth`;
-  }
+  async revokeToken(userId:number) {
+    return await this.prisma.refreshToken.updateMany({
+      where: { userId },
+      data: { revoked: true }
+    })
+  } 
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
 }
