@@ -25,7 +25,7 @@
     "db:reset": "prisma migrate reset"
   },
   "prisma": {
-    "seed": "tsnd prisma/seed.ts"
+    "seed": "prisma/seed.ts"
   },
   "husky": {
     "hooks": {
@@ -37,9 +37,11 @@
     "@nestjs/core": "^9.4.2",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^9.0.0",
+    "@types/jsonwebtoken": "^9.0.2",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "crypto": "^1.0.1",
     "jsonwebtoken": "^9.0.0",
     "prisma": "^4.15.0",
     "reflect-metadata": "^0.1.13",

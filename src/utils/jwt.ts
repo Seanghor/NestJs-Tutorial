@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
+import { sign } from 'jsonwebtoken';
+import {createHash} from 'crypto'
 import { TokenPayload } from './dto/util.dto'
 import { PrismaService } from '../prisma/prisma.service'
 import { User } from '@prisma/client'
 
 @Injectable()
-export class UtilService {
+export class JwtService {
     constructor(private prisma: PrismaService) { }
-
+    
     // generateToken
     generateAccessToken(user: User) {
         const payload = {
@@ -16,9 +16,9 @@ export class UtilService {
             email: user.email,
             role: user.role,
         } as unknown as TokenPayload
-
-        return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-            expiresIn: process.env.JWT_EXPIRATION_TIME,
+        return sign(payload, process.env.JWT_ACCESS_SECRET, {
+            expiresIn: process.env.JWT_EXPIRATION_TIME
+            // expiresIn: '120ms'
         })
     }
 
@@ -30,7 +30,7 @@ export class UtilService {
             jti,
         } as unknown as TokenPayload
 
-        return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+        return sign(payload, process.env.JWT_REFRESH_SECRET, {
             expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME,
         })
     }
@@ -42,7 +42,7 @@ export class UtilService {
     }
 
     hashToken(token: string) {
-        return crypto.createHash('sha256').update(token).digest('hex')
+        return createHash('sha256').update(token).digest('hex')
     }
 }
 
