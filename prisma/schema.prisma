@@ -12,7 +12,7 @@ datasource db {
   // url      = env("DATABASE_URL")
 }
 
-enum UserType {
+enum RoleEnum {
   ADMIN
   USER
   EMPLOYEE
@@ -58,7 +58,7 @@ model User {
   name         String?
   gender       GenderEnum
   password     String
-  role         UserType       @default(USER)
+  role         RoleEnum       @default(USER)
   enable       Boolean        @default(true)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime?      @updatedAt
@@ -68,7 +68,7 @@ model User {
 
 model Movie {
   id           Int         @id @default(autoincrement())
-  title        String
+  title        String      @unique
   image        String?
   description  String?
   duration_min Int

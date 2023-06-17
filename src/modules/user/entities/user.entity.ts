@@ -1,13 +1,13 @@
-import { GenderEnum, User, UserType } from "@prisma/client";
+import { GenderEnum, User, RoleEnum } from "@prisma/client";
 import { IsEnum } from "class-validator";
 import { Exclude } from "class-transformer";
 
 export class UserEntity implements User {
     id: number;
-    email: string;
     name: string;
+    email: string;
     gender: GenderEnum;
-    role: UserType;
+    role: RoleEnum;
     enable: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -23,9 +23,9 @@ export class UserEntity implements User {
 
 export class SerializeUser {
     id: number;
-    email: string;
     name: string;
-    role: UserType;
+    email: string;
+    role: RoleEnum;
     createdAt: Date;
     updatedAt: Date;
 

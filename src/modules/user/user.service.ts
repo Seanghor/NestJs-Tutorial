@@ -1,15 +1,20 @@
 import { BadRequestException, Injectable, UseFilters } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { GenderEnum, UserType } from '@prisma/client';
+import { GenderEnum, RoleEnum } from '@prisma/client';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
+import { JwtService } from 'src/utils/jwt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readonly jwtService: JwtService
+  ) { }
 
 
   async createUser(createUserDto: CreateUserDto) {
+    createUserDto.password = await this.jwtService.hashPassword(createUserDto.password)
     const users = await this.prisma.user.findUnique({
       where: { email: createUserDto.email },
     });
@@ -17,7 +22,7 @@ export class UserService {
       throw new Error('Email already exists');
     }
 
-    createUserDto.role = createUserDto.role as UserType;
+    createUserDto.role = createUserDto.role as RoleEnum;
     const res = await this.prisma.user.create({
       data: { ...createUserDto },
     });
@@ -31,15 +36,19 @@ export class UserService {
     return user;
   }
 
-  async findAllUser(role?: UserType, gender?: GenderEnum) {
-    if (role) {
-      role = role.toUpperCase() as UserType;
+  async findAllUser(role?: RoleEnum, gender?: GenderEnum) {
+    console.log(role);
+    console.log(gender);
+
+
+    if (role && !gender) {
+      role = role.toUpperCase() as RoleEnum;
       const users = await this.prisma.user.findMany({
-        where: { role: role as UserType },
+        where: { role: role as RoleEnum },
       });
       return users
     }
-    else if (gender) {
+    else if (gender && !role) {
       gender = gender.toUpperCase() as GenderEnum;
       const users = await this.prisma.user.findMany({
         where: { gender: gender as GenderEnum },
@@ -48,12 +57,12 @@ export class UserService {
     }
     else if (role && gender) {
       gender = gender.toUpperCase() as GenderEnum;
-      role = role.toUpperCase() as UserType;
+      role = role.toUpperCase() as RoleEnum;
       const users = await this.prisma.user.findMany({
         where: {
           AND: [
             { gender: gender as GenderEnum },
-            { role: role as UserType }
+            { role: role as RoleEnum }
           ]
         },
       });

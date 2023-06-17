@@ -11,8 +11,6 @@ export class IsAuthService  implements NestMiddleware {
         try {
             // const token = req.headers.authorization.split(' ')[1];
             const token = req.header('Authorization')?.replace('Bearer ', '');
-            console.log("Token:",token);
-            
             if (!token || token === null || token === 'Bearer') {
                 res.status(401)
                 throw new UnauthorizedException('🚫 Invalid Token 🚫')

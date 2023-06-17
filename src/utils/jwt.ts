@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { sign } from 'jsonwebtoken';
-import {createHash} from 'crypto'
+import { createHash } from 'crypto'
 import { TokenPayload } from './dto/util.dto'
 import { PrismaService } from '../prisma/prisma.service'
 import { User } from '@prisma/client'
+import * as  bcrypt from 'bcrypt'
 
 @Injectable()
 export class JwtService {
     constructor(private prisma: PrismaService) { }
-    
+
     // generateToken
     generateAccessToken(user: User) {
         const payload = {
@@ -43,6 +44,18 @@ export class JwtService {
 
     hashToken(token: string) {
         return createHash('sha256').update(token).digest('hex')
+    }
+
+    async hashPassword(password: string): Promise<string> {
+        const saltRounds = process.env.saltOrRounds || 12; // Number of salt rounds
+        const salt = await bcrypt.genSalt(+saltRounds);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        return hashedPassword;
+    }
+
+    async comparePassword(password:string, hashPassword:string) {
+        const isMatch = await bcrypt.compare(password, hashPassword);
+        return isMatch
     }
 }
 

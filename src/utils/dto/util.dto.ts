@@ -1,8 +1,8 @@
-import { UserType } from "@prisma/client";
+import { RoleEnum } from "@prisma/client";
 
 export class TokenPayload {
     userId: string;
     email: string;
-    role: UserType;
+    role: RoleEnum;
   }
   

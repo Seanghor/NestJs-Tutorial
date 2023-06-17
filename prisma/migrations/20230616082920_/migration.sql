@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "UserType" AS ENUM ('ADMIN', 'USER', 'EMPLOYEE');
+CREATE TYPE "RoleEnum" AS ENUM ('ADMIN', 'USER', 'EMPLOYEE');
 
 -- CreateEnum
 CREATE TYPE "GenderEnum" AS ENUM ('MALE', 'FEMALE');
@@ -39,7 +39,7 @@ CREATE TABLE "User" (
     "name" TEXT,
     "gender" "GenderEnum" NOT NULL,
     "password" TEXT NOT NULL,
-    "role" "UserType" NOT NULL DEFAULT 'USER',
+    "role" "RoleEnum" NOT NULL DEFAULT 'USER',
     "enable" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
