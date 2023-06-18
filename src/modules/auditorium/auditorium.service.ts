@@ -1,24 +1,60 @@
+import { UpdateAuditoriumDto } from './dto/update-auditorium.dto';
 import { Injectable } from '@nestjs/common';
+import { CreateAuditoriumDto } from './dto/create-auditorium.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuditoriumService {
-  create() {
-    return 'This action adds a new auditorium';
+  constructor(private readonly prisma: PrismaService) { }
+
+  async findAuditoriumByName(name: string) {
+    const res = await this.prisma.auditorium.findUnique({
+      where: {
+        name: name
+      }
+    })
+    return res
   }
 
-  findAll() {
-    return `This action returns all auditorium`;
+  async createAuditorium(createAuditoriumDto: CreateAuditoriumDto) {
+    const res = await this.prisma.auditorium.create({
+      data: createAuditoriumDto
+    })
+    return res
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auditorium`;
+  async findAllAuditorium() {
+    const res = await this.prisma.auditorium.findMany()
+    return res
   }
 
-  update(id: number) {
-    return `This action updates a #${id} auditorium`;
+  async findOneAuditorium(id: number) {
+    const res = await this.prisma.auditorium.findUnique({
+      where: {
+        id: id
+      }
+    })
+    return res
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auditorium`;
+  async updateOneAuditorium(id: number, updateAuditoriumDto: UpdateAuditoriumDto) {
+    const res = await this.prisma.auditorium.update({
+      where: {
+        id: id
+      },
+      data: updateAuditoriumDto
+    })
+    return res
+  }
+
+  async removeAuditorium(id: number) {
+    const res = await this.prisma.auditorium.delete({
+      where: {
+        id: id
+      }
+    })
+    return res
   }
 }
+
+

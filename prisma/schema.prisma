@@ -37,7 +37,7 @@ enum ScreeningStatus {
 
 model Campus {
   id      Int    @id @default(autoincrement())
-  name    String
+  name    String @unique
   address String
   phone   String
 }
@@ -81,12 +81,13 @@ model Movie {
 }
 
 model Auditorium {
-  id        Int         @id @default(autoincrement())
-  name      String
-  num_seats Int
-  createdAt DateTime    @default(now())
-  updatedAt DateTime?   @updatedAt
-  Screening Screening[]
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  num_seats   Int
+  isAvailable Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime?   @updatedAt
+  Screening   Screening[]
 }
 
 model Screening {

@@ -9,12 +9,14 @@ import { TicketModule } from './modules/ticket/ticket.module';
 import { AuditoriumModule } from './modules/auditorium/auditorium.module';
 import { MiddlewaresModule } from './middlewares/middlewares.module';
 // import { isAuthMiddleware } from './middlewares/middlewares.service';
+import { CampusModule } from './modules/campus/campus.module';
+import { ScreeningModule } from './modules/screening/screening.module';
 
 
 
 
 @Module({
-  imports: [AuthModule, PrismaModule, MovieModule, UserModule, TicketModule, AuditoriumModule, MiddlewaresModule],
+  imports: [AuthModule, PrismaModule, MovieModule, UserModule, TicketModule, AuditoriumModule, MiddlewaresModule, CampusModule, ScreeningModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,45 +1,36 @@
 import { prisma } from './../../../prisma/db';
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseFilters, ClassSerializerInterceptor, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseFilters, ClassSerializerInterceptor, UseInterceptors, Query, Req, UnauthorizedException } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { HttpExceptionFilter } from 'src/model/http-exception.filter';
+import { HttpExceptionFilter, UnauthorizedExceptionFilter } from 'src/model/http-exception.filter';
 import { MovieEntity } from './entities/movie.entity';
 import { MovieStatus } from '@prisma/client';
+import { Request, Response, NextFunction } from 'express';
 
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) { }
 
+  // @UseFilters(UnauthorizedException)
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  async createMovie(@Body() createMovieDto: CreateMovieDto) {
-    if (!createMovieDto.title) {
-      return new BadRequestException('Title is required')
+  async createMovie(@Req() req: Request, @Body() createMovieDto: CreateMovieDto) {
+    const user = req.payload
+    if (!['ADMIN', 'EMPLOYEE'].includes(user.role)) {
+      throw new UnauthorizedException('🚫 User is Un-Authorized 🚫')
     }
+    if (!createMovieDto.title) return new BadRequestException('Title is required')
     const exisitngTitle = await this.movieService.findMovieByTitle(createMovieDto.title)
-    if (exisitngTitle) {
-      throw new BadRequestException('Movie already exist')
-    }
-    if (!createMovieDto.image) {
-      throw new BadRequestException('Image is required')
-    }
-    if (!createMovieDto.description) {
-      throw new BadRequestException('Description is required')
-    }
-    if (!createMovieDto.duration_min) {
-      throw new BadRequestException('Duration_min is required')
-    }
-    if (!createMovieDto.rating) {
-      throw new BadRequestException('Rating is required')
-    }
-    if (!createMovieDto.price) {
-      throw new BadRequestException('Price is required')
-    }
-    if (!createMovieDto.status) {
-      throw new BadRequestException('Status is required')
-    }
+    if (exisitngTitle) throw new BadRequestException('Movie already exist')
+    if (!createMovieDto.image) throw new BadRequestException('Image is required')
+    if (!createMovieDto.description) throw new BadRequestException('Description is required')
+    if (!createMovieDto.duration_min) throw new BadRequestException('Duration_min is required')
+    if (!createMovieDto.rating) throw new BadRequestException('Rating is required')
+    if (!createMovieDto.price) throw new BadRequestException('Price is required')
+    if (!createMovieDto.status) throw new BadRequestException('Status is required')
+
     const movie = await this.movieService.createMovie(createMovieDto);
     return new MovieEntity(movie)
   }
@@ -70,15 +61,19 @@ export class MovieController {
   @Patch(':id')
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(ClassSerializerInterceptor)
-  async updateMovie(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
-    const existing = await this.movieService.findOneMovie(+id)
-    if (!existing) {
-      throw new BadRequestException()
+  async updateMovie(@Req() req: Request, @Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
+    const user = req.payload
+    if (!['ADMIN', 'EMPLOYEE'].includes(user.role)) throw new UnauthorizedException('🚫 User is Un-Authorized 🚫')
+    const existingMovie = await this.movieService.findOneMovie(+id)
+    if (!existingMovie) throw new BadRequestException()
+
+    if (updateMovieDto.title && updateMovieDto.title !== existingMovie.title) {
+      const exisitngTitle = await this.movieService.findMovieByTitle(updateMovieDto.title)
+      if (exisitngTitle) {
+        throw new BadRequestException('Title already exists. Please choose a different title.')
+      }
     }
-    const exisitngTitle = await this.movieService.findMovieByTitle(updateMovieDto.title)
-    if (exisitngTitle) {
-      throw new BadRequestException('Title already exists. Please choose a different title.')
-    }
+
     // if (!updateMovieDto.image) {
     //   throw new BadRequestException('Image is required')
     // }
@@ -105,11 +100,11 @@ export class MovieController {
   @Delete(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   @UseFilters(HttpExceptionFilter)
-  async removeMovie(@Param('id') id: string) {
-    const existing = await this.movieService.findOneMovie(+id)
-    if (!existing) {
-      throw new BadRequestException()
-    }
+  async removeMovie(@Req() req: Request, @Param('id') id: string) {
+    const user = req.payload
+    if (!['ADMIN', 'EMPLOYEE'].includes(user.role)) throw new UnauthorizedException('🚫 User is Un-Authorized 🚫')
+    const existingMovie = await this.movieService.findOneMovie(+id)
+    if (!existingMovie) throw new BadRequestException()
     const res = await this.movieService.removeMovie(+id)
     return new MovieEntity(res)
   }
