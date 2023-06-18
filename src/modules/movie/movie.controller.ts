@@ -5,7 +5,7 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { HttpExceptionFilter, UnauthorizedExceptionFilter } from 'src/model/http-exception.filter';
 import { MovieEntity } from './entities/movie.entity';
-import { MovieStatus } from '@prisma/client';
+import { MovieStatusEnum } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
 @Controller('movie')
@@ -38,8 +38,8 @@ export class MovieController {
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAllMovies(@Query('title') title?: string, @Query('status') status?: MovieStatus) {
-    if (status && !Object.values(MovieStatus).includes(status.toLocaleUpperCase() as MovieStatus)) {
+  async findAllMovies(@Query('title') title?: string, @Query('status') status?: MovieStatusEnum) {
+    if (status && !Object.values(MovieStatusEnum).includes(status.toLocaleUpperCase() as MovieStatusEnum)) {
       throw new BadRequestException('Status not valid')
     }
     const movies = await this.movieService.findAllMovie(title, status);

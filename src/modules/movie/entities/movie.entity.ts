@@ -1,4 +1,4 @@
-import { Movie, MovieStatus } from "@prisma/client";
+import { Movie, MovieStatusEnum } from "@prisma/client";
 
 export class MovieEntity implements Movie {
     id: number;
@@ -8,7 +8,7 @@ export class MovieEntity implements Movie {
     duration_min: number;
     rating: number;
     price: number;
-    status: MovieStatus;
+    status: MovieStatusEnum;
     createdAt: Date;
     updatedAt: Date;
     constructor(partial: Partial<MovieEntity>) {

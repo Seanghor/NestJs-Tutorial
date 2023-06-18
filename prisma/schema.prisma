@@ -23,13 +23,13 @@ enum GenderEnum {
   FEMALE
 }
 
-enum MovieStatus {
+enum MovieStatusEnum {
   COMING_SOON
   NOW_SHOWING
   END_SHOWING
 }
 
-enum ScreeningStatus {
+enum ScreeningStatusEnum {
   COMING_SOON
   NOW_SHOWING
   END_SHOWING
@@ -60,23 +60,23 @@ model User {
   password     String
   role         RoleEnum       @default(USER)
   enable       Boolean        @default(true)
+  bookings    Booking[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime?      @updatedAt
-  Ticket       Ticket[]
   RefreshToken RefreshToken[]
 }
 
 model Movie {
-  id           Int         @id @default(autoincrement())
-  title        String      @unique
+  id           Int             @id @default(autoincrement())
+  title        String          @unique
   image        String?
   description  String?
   duration_min Int
   rating       Float
   price        Float?
-  status       MovieStatus
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime?   @updatedAt
+  status       MovieStatusEnum
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime?       @updatedAt
   Screening    Screening[]
 }
 
@@ -91,30 +91,46 @@ model Auditorium {
 }
 
 model Screening {
-  id           Int             @id @default(autoincrement())
-  movie        Movie           @relation(fields: [movieId], references: [id])
-  auditorium   Auditorium      @relation(fields: [auditoriumId], references: [id])
+  id           Int                 @id @default(autoincrement())
+  movie        Movie               @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  auditorium   Auditorium?         @relation(fields: [auditoriumId], references: [id], onDelete: SetNull)
   movieId      Int
-  auditoriumId Int
-  startTime    DateTime
-  endTime      DateTime?
-  status       ScreeningStatus
-  isAvailable  Boolean
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime?       @updatedAt
+  auditoriumId Int?
+  date_show    DateTime
+  duration_min Int
+  startTime    DateTime            @db.Time
+  endTime      DateTime?           @db.Time
+  status       ScreeningStatusEnum @default(COMING_SOON)
+  isAvailable  Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime?           @updatedAt
   Ticket       Ticket[]
+  Booking      Booking[]
 }
 
 model Ticket {
   id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
   screening   Screening @relation(fields: [screeningId], references: [id])
-  userId      Int
   screeningId Int
   seat        String
   price       Float
-  paid        Boolean
   active      Boolean
+  bookingId   Int?
+  booking     Booking?  @relation(fields: [bookingId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
+}
+
+model Booking {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  screening   Screening @relation(fields: [screeningId], references: [id])
+  screeningId Int
+  num         Int
+  price_for_1 Int
+  total       Int       @default(dbgenerated("(\"num\" * \"price_for_1\")"))
+  tickets     Ticket[]
+  payStatus   Boolean
+  createAt    DateTime  @default(now())
 }

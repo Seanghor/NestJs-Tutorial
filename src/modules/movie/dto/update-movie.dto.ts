@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateMovieDto } from './create-movie.dto';
 import { IsEmpty, IsEnum, IsNotEmpty } from 'class-validator';
-import { MovieStatus } from '@prisma/client';
+import { MovieStatusEnum } from '@prisma/client';
 
 export class UpdateMovieDto extends PartialType(CreateMovieDto) {
     @IsNotEmpty()
@@ -23,6 +23,6 @@ export class UpdateMovieDto extends PartialType(CreateMovieDto) {
     price: number
 
     @IsNotEmpty()
-    @IsEnum(MovieStatus)
-    status: MovieStatus
+    @IsEnum(MovieStatusEnum)
+    status: MovieStatusEnum
 }

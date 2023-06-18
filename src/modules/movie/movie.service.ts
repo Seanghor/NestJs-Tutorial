@@ -1,7 +1,7 @@
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { BadRequestException, Injectable, UseFilters, } from '@nestjs/common';
-import { MovieStatus, PrismaClient } from '@prisma/client';
+import { MovieStatusEnum, PrismaClient } from '@prisma/client';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -32,7 +32,7 @@ export class MovieService {
   }
 
   // findMany
-  async findAllMovie(title?: string, status?: MovieStatus) {
+  async findAllMovie(title?: string, status?: MovieStatusEnum) {
     if (title && !status) {
       const titleLower = title.toLocaleLowerCase()
       const res = await this.prisma.movie.findMany({
@@ -45,7 +45,7 @@ export class MovieService {
     else if (!title && status) {
       const res = await this.prisma.movie.findMany({
         where: {
-          status: status.toLocaleUpperCase() as MovieStatus
+          status: status.toLocaleUpperCase() as MovieStatusEnum
         }
       })
       return res
@@ -56,7 +56,7 @@ export class MovieService {
         where: {
           AND: [
             { title: titleLower },
-            { status: status.toLocaleUpperCase() as MovieStatus }
+            { status: status.toLocaleUpperCase() as MovieStatusEnum }
           ]
         }
       })

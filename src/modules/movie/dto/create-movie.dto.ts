@@ -1,4 +1,4 @@
-import { MovieStatus } from "@prisma/client";
+import { MovieStatusEnum } from "@prisma/client";
 import { IsEmpty, IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateMovieDto {
@@ -21,6 +21,6 @@ export class CreateMovieDto {
     price: number
 
     @IsNotEmpty()
-    @IsEnum(MovieStatus)
-    status: MovieStatus
+    @IsEnum(MovieStatusEnum)
+    status: MovieStatusEnum
 }
