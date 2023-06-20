@@ -61,10 +61,8 @@ export class ScreeningController {
     //     throw new BadRequestException('Invalid title')
     //   }
     // }
-
-
     const res = await this.screeningService.findAll(movie)
-    if (res.length === 0) {
+    if (movie && res.length === 0) {
       throw new BadRequestException()
     }
     return res

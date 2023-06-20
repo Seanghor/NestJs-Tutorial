@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Screening" ALTER COLUMN "status" SET DEFAULT 'COMING_SOON';

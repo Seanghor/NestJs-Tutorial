@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Screening" ALTER COLUMN "startTime" SET DATA TYPE TIME,
-ALTER COLUMN "endTime" SET DATA TYPE TIME;
