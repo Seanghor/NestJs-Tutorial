@@ -1,24 +1,99 @@
-import { Injectable } from '@nestjs/common';
+import { UpdateMovieDto } from './dto/update-movie.dto';
+import { CreateMovieDto } from './dto/create-movie.dto';
+import { BadRequestException, Injectable, UseFilters, } from '@nestjs/common';
+import { MovieStatusEnum, PrismaClient } from '@prisma/client';
+import { HttpExceptionFilter } from 'src/model/http-exception.filter';
+import { PrismaService } from 'src/prisma/prisma.service';
+
 
 @Injectable()
 export class MovieService {
-  create() {
-    return 'This action adds a new movie';
+  constructor(private prisma: PrismaService) { }
+
+  // find by title
+  @UseFilters(HttpExceptionFilter)
+  async findMovieByTitle(title: string) {
+    const res = await this.prisma.movie.findUnique({
+      where: {
+        title: title
+      }
+    })
+    return res
   }
 
-  findAll() {
-    return `This action returns all movie`;
+  // createOne
+  @UseFilters(HttpExceptionFilter)
+  async createMovie(createMovieDto: CreateMovieDto) {
+    createMovieDto.title = createMovieDto.title.toLocaleLowerCase()
+    const res = await this.prisma.movie.create({
+      data: createMovieDto
+    })
+    return res
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  // findMany
+  async findAllMovie(title?: string, status?: MovieStatusEnum) {
+    if (title && !status) {
+      const titleLower = title.toLocaleLowerCase()
+      const res = await this.prisma.movie.findMany({
+        where: {
+          title: titleLower
+        }
+      })
+      return res
+    }
+    else if (!title && status) {
+      const res = await this.prisma.movie.findMany({
+        where: {
+          status: status.toLocaleUpperCase() as MovieStatusEnum
+        }
+      })
+      return res
+    }
+    else if (title && status) {
+      const titleLower = title.toLocaleLowerCase()
+      const res = await this.prisma.movie.findMany({
+        where: {
+          AND: [
+            { title: titleLower },
+            { status: status.toLocaleUpperCase() as MovieStatusEnum }
+          ]
+        }
+      })
+      return res
+    }
+    const res = await this.prisma.movie.findMany()
+    return res
   }
 
-  update(id: number) {
-    return `This action updates a #${id} movie`;
+  // findOne
+  async findOneMovie(id: number) {
+    const res = await this.prisma.movie.findUnique({
+      where: {
+        id: id
+      }
+    })
+    return res
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async updateOneMovie(id: number, updateMovieDto: UpdateMovieDto) {
+    updateMovieDto.title = updateMovieDto.title.toLocaleLowerCase()
+    const res = await this.prisma.movie.update({
+      where: {
+        id: id
+      },
+      data: updateMovieDto
+    })
+    return res
+  }
+
+  // Delete
+  async removeMovie(id: number) {
+    const res = await this.prisma.movie.delete({
+      where: {
+        id: id
+      }
+    })
+    return res
   }
 }
