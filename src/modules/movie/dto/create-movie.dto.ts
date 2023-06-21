@@ -6,7 +6,7 @@ export class CreateMovieDto {
     title: string
 
     @IsEmpty()
-    image:string 
+    image: string
 
     @IsEmpty()
     description: string
@@ -24,3 +24,32 @@ export class CreateMovieDto {
     @IsEnum(MovieStatusEnum)
     status: MovieStatusEnum
 }
+
+export class ImportMovieDto {
+    id: number
+
+    @IsNotEmpty()
+    title: string
+
+    @IsEmpty()
+    image: string
+
+    @IsEmpty()
+    description: string
+
+    @IsNotEmpty()
+    duration_min: number
+
+    @IsNotEmpty()
+    rating: number
+
+    @IsNotEmpty()
+    price: number
+
+    @IsNotEmpty()
+    @IsEnum(MovieStatusEnum)
+    status: MovieStatusEnum
+}
+
+
+

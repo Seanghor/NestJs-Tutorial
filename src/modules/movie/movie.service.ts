@@ -1,9 +1,12 @@
+import { MovieEntity } from 'src/modules/movie/entities/movie.entity';
+import { IsDate } from 'class-validator';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { CreateMovieDto } from './dto/create-movie.dto';
-import { BadRequestException, Injectable, UseFilters, } from '@nestjs/common';
-import { MovieStatusEnum, PrismaClient } from '@prisma/client';
+import { CreateMovieDto, ImportMovieDto } from './dto/create-movie.dto';
+import { Injectable, UseFilters, } from '@nestjs/common';
+import { MovieStatusEnum } from '@prisma/client';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
 import { PrismaService } from 'src/prisma/prisma.service';
+
 
 
 @Injectable()
@@ -96,4 +99,16 @@ export class MovieService {
     })
     return res
   }
+
+  // import
+  @UseFilters(HttpExceptionFilter)
+  async importMovie(file: ImportMovieDto[]) {
+    const createdMovies = await this.prisma.movie.createMany({
+      data: file,
+      skipDuplicates: true
+    })
+  return createdMovies
 }
+}
+
+
