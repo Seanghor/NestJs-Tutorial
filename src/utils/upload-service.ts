@@ -90,21 +90,19 @@ export class ExcelService {
 
     const rows = worksheet.getRows(rowStartIndex, numberOfRows) ?? [];
 
-    const movies = rows.filter(row => row.hasValues)
+    return rows.filter(row => row.hasValues)
       .map((row): MovieImportEntity => {
+        const imageObject: any = row.getCell(3).value;
         return {
           // id: Number(getCellValue(row, 1)),
           title: getCellValue(row, 2).toString().toLocaleLowerCase(),
-
-          image: getCellValue(row, 3).toString(),
+          image: imageObject?.hyperlink || imageObject?.text,
           description: getCellValue(row, 4).toString(),
           duration_min: +getCellValue(row, 5),
-
           rating: Number(getCellValue(row, 6)),
           price: Number(getCellValue(row, 7)),
           status: getCellValue(row, 8) as MovieStatusEnum // (YYY-MM-DD)
         } as MovieImportEntity
-      });
-    return movies
+      })
   }
 }

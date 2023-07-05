@@ -143,7 +143,6 @@ export class ExcelController {
   async importMovie(@UploadedFile() file: Express.Multer.File) {
     const moviesData = await this.excelService.readDataFromExcel(file)
     const res = await this.movieService.importMovie(moviesData)
-    // console.log(moviesData);
     return res
   }
 }
