@@ -85,7 +85,9 @@ async function main() {
     const movieList = [
         {
             title: "Three Kingdoms",
-            image: "image",
+            tmovieTypeype: "ACTION",
+            image: "https://www.sonypictures.com/sites/default/files/styles/max_560x840/public/title-key-art/spidermannowayhome_onesheet_rating_extended_V1.jpg?itok=zCHneiV0",
+            trailer: "https://www.majorcineplex.com.kh/showtime?movies=HO00001213",
             description: "description",
             duration_min: 70,
             rating: 6.4,
@@ -94,7 +96,9 @@ async function main() {
         },
         {
             title: "Fast and Furious 7",
-            image: "image",
+            image: "https://www.sonypictures.com/sites/default/files/styles/max_560x840/public/title-key-art/spidermannowayhome_onesheet_rating_extended_V1.jpg?itok=zCHneiV0",
+            trailer: "https://www.majorcineplex.com.kh/showtime?movies=HO00001213",
+            tmovieTypeype: "ACTION",
             description: "description",
             duration_min: 70,
             rating: 6.4,
@@ -103,7 +107,9 @@ async function main() {
         },
         {
             title: "365days",
-            image: "image",
+            image: "https://www.sonypictures.com/sites/default/files/styles/max_560x840/public/title-key-art/spidermannowayhome_onesheet_rating_extended_V1.jpg?itok=zCHneiV0",
+            trailer: "https://www.majorcineplex.com.kh/showtime?movies=HO00001213",
+            tmovieTypeype: "ACTION",
             description: "description",
             duration_min: 120,
             rating: 6.4,
@@ -116,7 +122,8 @@ async function main() {
         const movie = await prisma.movie.create({
             data: {
                 title: movieList[i].title,
-                image: "image",
+                image:movieList[i].image,
+                trailer: movieList[i].trailer,
                 description: "description",
                 duration_min: 120,
                 rating: 6.4,

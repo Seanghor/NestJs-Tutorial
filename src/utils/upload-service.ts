@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as xlsx from 'xlsx';
 import * as path from 'path';
 import Excel from 'exceljs';
-import { Movie, MovieStatusEnum } from '@prisma/client';
+import { Movie, MovieStatusEnum, MovieTypeEnum } from '@prisma/client';
 import { Workbook } from 'exceljs';
 import { CreateMovieDto } from 'src/modules/movie/dto/create-movie.dto';
 import { MovieEntity, MovieImportEntity } from 'src/modules/movie/entities/movie.entity';
@@ -93,6 +93,7 @@ export class ExcelService {
     return rows.filter(row => row.hasValues)
       .map((row): MovieImportEntity => {
         const imageObject: any = row.getCell(3).value;
+        const trailerObject: any = row.getCell(10).value
         return {
           // id: Number(getCellValue(row, 1)),
           title: getCellValue(row, 2).toString().toLocaleLowerCase(),
@@ -101,7 +102,9 @@ export class ExcelService {
           duration_min: +getCellValue(row, 5),
           rating: Number(getCellValue(row, 6)),
           price: Number(getCellValue(row, 7)),
-          status: getCellValue(row, 8) as MovieStatusEnum // (YYY-MM-DD)
+          status: getCellValue(row, 8) as MovieStatusEnum, // (YYY-MM-DD)
+          movieType: getCellValue(row, 9) as MovieTypeEnum,
+          trailer: trailerObject?.hyperlink || imageObject?.text,
         } as MovieImportEntity
       })
   }

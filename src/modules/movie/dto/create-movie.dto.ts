@@ -1,4 +1,4 @@
-import { MovieStatusEnum } from "@prisma/client";
+import { MovieStatusEnum, MovieTypeEnum } from "@prisma/client";
 import { IsEmpty, IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateMovieDto {
@@ -10,6 +10,12 @@ export class CreateMovieDto {
 
     @IsEmpty()
     description: string
+
+    @IsEmpty()
+    trailer: string | null;
+
+    @IsNotEmpty()
+    movieType: MovieTypeEnum;
 
     @IsNotEmpty()
     duration_min: number
@@ -36,6 +42,12 @@ export class ImportMovieDto {
 
     @IsEmpty()
     description: string
+
+    @IsEmpty()
+    trailer: string | null;
+
+    @IsNotEmpty()
+    movieType: MovieTypeEnum;
 
     @IsNotEmpty()
     duration_min: number

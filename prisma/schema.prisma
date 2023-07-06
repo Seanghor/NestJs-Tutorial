@@ -30,6 +30,13 @@ enum MovieStatusEnum {
   TOP_MOVIE
 }
 
+enum MovieTypeEnum {
+  ACTION
+  COMEDY
+  HORRO
+  DRAMA
+}
+
 enum ScreeningStatusEnum {
   COMING_SOON
   NOW_SHOWING
@@ -71,6 +78,8 @@ model Movie {
   id           Int             @id @default(autoincrement())
   title        String          @unique
   image        String?
+  trailer      String?
+  movieType    MovieTypeEnum   @default(ACTION)
   description  String?
   duration_min Int
   rating       Float
