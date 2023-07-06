@@ -24,7 +24,28 @@ export class ScreeningService {
           movieId: +id
         }
       })
-      return res
+
+      // make dimensional array different by show_date:
+      const result = [];
+      let currentDate = null;
+      let currentGroup = null;
+
+      for (const item of res) {
+        const itemDate = item.date_show.toISOString().split('T')[0];
+
+        if (itemDate !== currentDate) {
+          currentDate = itemDate;
+          currentGroup = [];
+          result.push({
+            date: itemDate,
+            group: currentGroup,
+          });
+        }
+
+        currentGroup.push(item);
+      }
+
+      return result;
     }
     if (movie && isNaN(id)) {
       const res = await this.prisma.screening.findMany({
@@ -34,7 +55,27 @@ export class ScreeningService {
           }
         }
       })
-      return res
+      // make dimensional array different by show_date:
+      const result = [];
+      let currentDate = null;
+      let currentGroup = null;
+
+      for (const item of res) {
+        const itemDate = item.createdAt.toISOString().split('T')[0];
+
+        if (itemDate !== currentDate) {
+          currentDate = itemDate;
+          currentGroup = [];
+          result.push({
+            date: itemDate,
+            group: currentGroup,
+          });
+        }
+
+        currentGroup.push(item);
+      }
+
+      return result;
     }
     const res = await this.prisma.screening.findMany()
     return res
