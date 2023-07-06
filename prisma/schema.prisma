@@ -9,8 +9,8 @@ datasource db {
   provider = "postgresql"
   // postgresql://postgres:hor123@localhost:5432/cloud_demo
   // url      = "postgresql://postgres:hor123@localhost:5432/cloud_demo"
-  url      = env("DATABASE_URL_LOCAL")
-  // url      = env("DATABASE_URL_DOCKER")
+  // url      = env("DATABASE_URL_LOCAL")
+  url      = env("DATABASE_URL_DOCKER")
 }
 
 enum RoleEnum {
@@ -27,7 +27,7 @@ enum GenderEnum {
 enum MovieStatusEnum {
   COMING_SOON
   NOW_SHOWING
-  END_SHOWING
+  TOP_MOVIE
 }
 
 enum ScreeningStatusEnum {
