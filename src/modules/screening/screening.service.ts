@@ -23,18 +23,20 @@ export class ScreeningService {
         where: {
           movieId: +id
         },
+        orderBy:
+        {
+          "date_show": "asc"
+        },
         include: {
           auditorium: true
         }
       })
-
-      // make dimensional array different by show_date:
       const result = [];
       let currentDate = null;
       let currentGroup = null;
 
       for (const item of res) {
-        const itemDate = item.date_show.toISOString().split('T')[0];
+        const itemDate = item.date_show.toISOString().split('T')[0].slice(2); // Extract yy-mm-dd
 
         if (itemDate !== currentDate) {
           currentDate = itemDate;
@@ -48,7 +50,7 @@ export class ScreeningService {
         currentGroup.push(item);
       }
 
-      return result;
+      return result
     }
     if (movie && isNaN(id)) {
       const res = await this.prisma.screening.findMany({
@@ -67,7 +69,9 @@ export class ScreeningService {
       let currentGroup = null;
 
       for (const item of res) {
-        const itemDate = item.createdAt.toISOString().split('T')[0];
+        const itemDate = item.date_show.toISOString().split('T')[0];
+        console.log(itemDate);
+
 
         if (itemDate !== currentDate) {
           currentDate = itemDate;
