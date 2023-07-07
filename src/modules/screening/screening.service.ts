@@ -22,6 +22,9 @@ export class ScreeningService {
       const res = await this.prisma.screening.findMany({
         where: {
           movieId: +id
+        },
+        include: {
+          auditorium: true
         }
       })
 
@@ -53,6 +56,9 @@ export class ScreeningService {
           movie: {
             title: movie.toLocaleLowerCase()
           }
+        },
+        include: {
+          auditorium: true
         }
       })
       // make dimensional array different by show_date:
