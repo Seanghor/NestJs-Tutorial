@@ -16,7 +16,7 @@ export class CreateScreeningDto {
     
     @IsNotEmpty()
     @IsDate()
-    startTime: Date 
+    startTime: Date | string
 
     @IsNotEmpty()
     @IsDate()

@@ -36,16 +36,17 @@ export class ScreeningController {
     createScreeningDto.date_show = new Date(createScreeningDto.date_show)
 
     if (!createScreeningDto.startTime) throw new BadRequestException('startTime is required')
-    createScreeningDto.startTime = new Date(
-      `1970-01-07T${createScreeningDto.startTime}:00.000Z`
-    );
+    createScreeningDto.startTime = `1970-01-07T${createScreeningDto.startTime}:00.000Z`
+
     const duration_min = existingMovie.duration_min
     createScreeningDto.duration_min = duration_min
-    const endTime = new Date(createScreeningDto.startTime.getTime() + duration_min * 60000); // 30 minutes = 30 * 60,000 milliseconds
+    const endTime = new Date(new Date(createScreeningDto.startTime).getTime() + duration_min * 60000); // 30 minutes = 30 * 60,000 milliseconds
     createScreeningDto.endTime = new Date(endTime.toISOString());
 
-    const res = await this.screeningService.createScreening(createScreeningDto)
-    return res
+    console.log(createScreeningDto.startTime);
+
+    // const res = await this.screeningService.createScreening(createScreeningDto)
+    // return res
   }
 
   @UseFilters(HttpExceptionFilter)
@@ -109,8 +110,8 @@ export class ScreeningController {
       updateScreeningDto.duration_min = duration_min   //duration will update
       // if make change startTime --> get new startTime and new endTime
       if (updateScreeningDto.startTime) {
-        const startTime = new Date(`1970-01-07T${updateScreeningDto.startTime}:00.000Z`);  //convert from hh-mm to DateTime in prisma
-        const endTime = new Date(startTime.getTime() + duration_min * 60000)
+        const startTime = `1970-01-07T${updateScreeningDto.startTime}:00.000Z`;  //convert from hh-mm to DateTime in prisma
+        const endTime = new Date(new Date(startTime).getTime() + duration_min * 60000)
         updateScreeningDto.endTime = new Date(endTime.toISOString());
         console.log(startTime);
         console.log(endTime);
@@ -123,8 +124,8 @@ export class ScreeningController {
 
     // if change startTime, but dont change movieId --> duration_mn not change
     if (updateScreeningDto.startTime) {
-      const startTime = new Date(`1970-01-07T${updateScreeningDto.startTime}:00.000Z`);  //convert from hh-mm to DateTime in prisma
-      const endTime = new Date(startTime.getTime() + existingScreening.duration_min * 60000)
+      const startTime = `1970-01-07T${updateScreeningDto.startTime}:00.000Z`;  //convert from hh-mm to DateTime in prisma
+      const endTime = new Date(new Date(startTime).getTime() + existingScreening.duration_min * 60000)
       updateScreeningDto.startTime = startTime
       updateScreeningDto.endTime = new Date(endTime.toISOString());
     }
