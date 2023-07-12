@@ -1,14 +1,18 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters, Query, BadRequestException } from '@nestjs/common';
 import { SeatService } from './seat.service';
 import { CreateSeatDto } from './dto/create-seat.dto';
-import { UpdateSeatDto } from './dto/update-seat.dto';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
 import { AuditoriumService } from '../auditorium/auditorium.service';
+import { SeatStatusEnum } from '@prisma/client';
+import { UpdateSeatStatusDto } from './dto/update-seat.dto';
+import { ScreeningService } from '../screening/screening.service';
 
 @Controller('seat')
 export class SeatController {
-  constructor(private readonly seatService: SeatService,
-    private readonly auditoriumService: AuditoriumService
+  constructor(
+    private readonly seatService: SeatService,
+    private readonly auditoriumService: AuditoriumService,
+    private readonly screeningService: ScreeningService
   ) { }
 
   @Post()
@@ -18,14 +22,20 @@ export class SeatController {
 
   @UseFilters(HttpExceptionFilter)
   @Get()
-  async findAll(@Query('auditoriumId') auditoriumId?: string) {
+  async findAll(@Query('auditoriumId') auditoriumId?: string, @Query('screeningId') screeningId?: string) {
     if (auditoriumId) {
       const existingAuditorium = await this.auditoriumService.findOneAuditorium(+auditoriumId)
       if (!existingAuditorium) {
         throw new BadRequestException()
       }
     }
-    const res = await this.seatService.findAll(+auditoriumId)
+    if (screeningId) {
+      const existingScreening = await this.screeningService.findOne(+screeningId)
+      if (!existingScreening) {
+        throw new BadRequestException()
+      }
+    }
+    const res = await this.seatService.findAll(+auditoriumId, +screeningId)
     return res
   }
 
@@ -35,8 +45,11 @@ export class SeatController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSeatDto: UpdateSeatDto) {
-    return this.seatService.update(+id, updateSeatDto);
+  async updateStatus(@Param('id') id: string, @Body() seatDto: UpdateSeatStatusDto) {
+    console.log(seatDto.status);
+
+    const res = await this.seatService.updateStatus(+id, seatDto);
+    return res
   }
 
   @Delete(':id')

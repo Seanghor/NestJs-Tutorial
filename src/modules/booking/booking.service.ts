@@ -8,6 +8,7 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { ScreeningService } from '../screening/screening.service';
 import { MovieService } from '../movie/movie.service';
 import { GenerateCustomIDService, } from 'src/utils/jwt';
+import { SeatStatusEnum } from '@prisma/client';
 
 @Injectable()
 export class BookingService {
@@ -40,14 +41,13 @@ export class BookingService {
       data: createBookingDto
     })
 
-    const number_of_tickets = book.num
+    const number_of_tickets = createBookingDto.num
     for (let i = 0; i < number_of_tickets; i++) {
       // console.log(createBookingDto.tickets);
       const ticket = await this.prisma.ticket.create({
         data: {
           screeningId: book.screeningId,
           customId: await this.generateCustomeIDService.generateTicketCustomId(),
-          // seatId: i+1,
           seatId: createBookingAndTicketDto.selectedSeat[i],
           price: Number(book.price_for_1),
           payStatus: true,
@@ -57,6 +57,7 @@ export class BookingService {
       })
     }
 
+    // update status of seat after book:
     await this.prisma.seat.updateMany({
       where: {
         id: {
@@ -64,7 +65,7 @@ export class BookingService {
         }
       },
       data: {
-        isDisable: true
+        status: SeatStatusEnum.OWNED
       }
     })
     const res = await this.prisma.ticket.findMany(
@@ -77,6 +78,39 @@ export class BookingService {
         }
       }
     )
+
+    // verify screening is available:
+    const getCurrentTicket = await this.prisma.screening.findUnique({
+      where: {
+        id: book.screeningId
+      },
+      select: {
+        _count: {
+          select: {
+            Ticket: true
+          },
+        },
+      },
+    })
+    const numOfCurrentTicket = getCurrentTicket._count.Ticket
+    const auditorium = await this.prisma.auditorium.findUnique({
+      where: {
+        id: screeningInfo.auditoriumId
+      }
+    })
+    console.log("current booking:", `${numOfCurrentTicket}/${auditorium.num_seats}`);
+
+    // validate screen if seat is full:
+    if (numOfCurrentTicket === auditorium.num_seats) {
+      await this.prisma.screening.update({
+        where: {
+          id: createBookingAndTicketDto.screeningId
+        },
+        data: {
+          isAvailable: false
+        }
+      })
+    }
     return res
 
 

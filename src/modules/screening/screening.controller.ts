@@ -45,8 +45,8 @@ export class ScreeningController {
 
     console.log(createScreeningDto.startTime);
 
-    // const res = await this.screeningService.createScreening(createScreeningDto)
-    // return res
+    const res = await this.screeningService.createScreening(createScreeningDto)
+    return res
   }
 
   @UseFilters(HttpExceptionFilter)
