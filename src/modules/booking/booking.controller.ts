@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseFilters, BadRequestException } from '@nestjs/common';
 import { BookingService } from './booking.service';
-import { CreateBookingAndTicketDto, CreateBookingDto } from './dto/create-booking.dto';
+import { CreateBookingAndTicketDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { Request } from 'express';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';

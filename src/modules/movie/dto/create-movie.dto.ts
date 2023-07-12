@@ -1,5 +1,5 @@
 import { MovieStatusEnum, MovieTypeEnum } from "@prisma/client";
-import { IsEmpty, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsEmpty, IsEnum, IsNotEmpty } from "class-validator";
 
 export class CreateMovieDto {
     @IsNotEmpty()

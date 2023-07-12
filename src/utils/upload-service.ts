@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import * as xlsx from 'xlsx';
 import * as path from 'path';
 import Excel from 'exceljs';
-import { Movie, MovieStatusEnum, MovieTypeEnum } from '@prisma/client';
+import { MovieStatusEnum, MovieTypeEnum } from '@prisma/client';
 import { Workbook } from 'exceljs';
-import { CreateMovieDto } from 'src/modules/movie/dto/create-movie.dto';
-import { MovieEntity, MovieImportEntity } from 'src/modules/movie/entities/movie.entity';
+import {  MovieImportEntity } from 'src/modules/movie/entities/movie.entity';
 // const filePath = path.resolve('.movie.xlsx');
 // const filePath = path.resolve(__dirname, 'movie.xlsx');
 // const filePath = path.resolve(__dirname, '../utils/movie.xlsx');
@@ -30,40 +28,40 @@ const getCellValue = (row: Excel.Row, cellIndex: number) => {
   return cell.value ? cell.value : '';
 };
 
+// TEST
+// const main = async () => {
+//   const workbook = new Workbook();
+//   // const workbook = new Excel.Workbook();
+//   const content = await workbook.xlsx.readFile(filePath);
 
-const main = async () => {
-  const workbook = new Workbook();
-  // const workbook = new Excel.Workbook();
-  const content = await workbook.xlsx.readFile(filePath);
+//   const worksheet = content.worksheets[0];
+//   if (!worksheet || !worksheet.rowCount) {
+//     console.log('Worksheet is empty or does not exist.');
+//     return;
+//   }
+//   const rowStartIndex = 2;
+//   const numberOfRows = worksheet.rowCount - 1;
 
-  const worksheet = content.worksheets[0];
-  if (!worksheet || !worksheet.rowCount) {
-    console.log('Worksheet is empty or does not exist.');
-    return;
-  }
-  const rowStartIndex = 2;
-  const numberOfRows = worksheet.rowCount - 1;
+//   const rows = worksheet.getRows(rowStartIndex, numberOfRows) ?? [];
 
-  const rows = worksheet.getRows(rowStartIndex, numberOfRows) ?? [];
+//   rows.filter(row => row.hasValues)
+//     .map((row): MovieImportEntity => {
+//       return {
+//         id: Number(getCellValue(row, 1)),
 
-  rows.filter(row => row.hasValues)
-    .map((row): MovieImportEntity => {
-      return {
-        id: Number(getCellValue(row, 1)),
+//         title: getCellValue(row, 2).toString(),
 
-        title: getCellValue(row, 2).toString(),
+//         image: getCellValue(row, 3).toString(),
+//         description: getCellValue(row, 4).toString(),
+//         duration_min: +getCellValue(row, 5),
 
-        image: getCellValue(row, 3).toString(),
-        description: getCellValue(row, 4).toString(),
-        duration_min: +getCellValue(row, 5),
+//         rating: Number(getCellValue(row, 6)),
+//         price: Number(getCellValue(row, 7)),
+//         status: getCellValue(row, 8) as MovieStatusEnum // (YYY-MM-DD)
+//       } as MovieImportEntity
+//     });
 
-        rating: Number(getCellValue(row, 6)),
-        price: Number(getCellValue(row, 7)),
-        status: getCellValue(row, 8) as MovieStatusEnum // (YYY-MM-DD)
-      } as MovieImportEntity
-    });
-
-};
+// };
 
 
 

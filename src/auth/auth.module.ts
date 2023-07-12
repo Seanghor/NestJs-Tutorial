@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { AuthController, RegisterController } from './auth.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from 'src/modules/user/user.service';
-import { UserController } from 'src/modules/user/user.controller';
 import { JwtService } from 'src/utils/jwt';
 
 

@@ -1,5 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException, UseFilters } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { BadRequestException, Injectable, NotFoundException, UseFilters } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRefreshTokenDto } from './dto/create-auth.dto';
 import { JwtService } from 'src/utils/jwt';

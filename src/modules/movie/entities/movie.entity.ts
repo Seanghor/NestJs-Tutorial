@@ -1,5 +1,5 @@
 import { Movie, MovieStatusEnum, MovieTypeEnum } from "@prisma/client";
-import { Exclude } from "class-transformer";
+// import { Exclude } from "class-transformer";
 
 export class MovieEntity implements Movie {
     id: number;

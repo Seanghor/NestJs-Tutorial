@@ -3,10 +3,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseFilters, B
 import { ScreeningService } from './screening.service';
 import { CreateScreeningDto } from './dto/create-screening.dto';
 import { UpdateScreeningDto } from './dto/update-screening.dto';
-import { title } from 'process';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
 import { AuditoriumService } from '../auditorium/auditorium.service';
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 
 @Controller('screening')
 export class ScreeningController {

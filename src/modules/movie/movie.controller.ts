@@ -1,17 +1,14 @@
-import { prisma } from './../../../prisma/db';
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, BadRequestException, UseFilters, ClassSerializerInterceptor, UseInterceptors, Query, Req, UnauthorizedException, HttpException, HttpStatus, ParseFilePipeBuilder, MaxFileSizeValidator, ParseFilePipe, FileTypeValidator, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, BadRequestException, UseFilters, ClassSerializerInterceptor, UseInterceptors, Query, Req, UnauthorizedException } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { HttpExceptionFilter, UnauthorizedExceptionFilter } from 'src/model/http-exception.filter';
-import { MovieEntity,  } from './entities/movie.entity';
+import { HttpExceptionFilter } from 'src/model/http-exception.filter';
+import { MovieEntity, } from './entities/movie.entity';
 import { MovieStatusEnum } from '@prisma/client';
-import { Request, Response, NextFunction } from 'express';
-import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ExcelService } from 'src/utils/upload-service';
-import readExcelFile from 'read-excel-file';
 import * as path from 'path';
-import * as xlsx from 'xlsx';
 import { diskStorage } from 'multer';
 
 @Controller('movie')
@@ -143,7 +140,7 @@ export class ExcelController {
   async importMovie(@UploadedFile() file: Express.Multer.File) {
     const moviesData = await this.excelService.readDataFromExcel(file)
     console.log(moviesData);
-    
+
     const res = await this.movieService.importMovie(moviesData)
     return res
   }

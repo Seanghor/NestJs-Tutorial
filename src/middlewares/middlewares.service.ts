@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware, UnauthorizedException, UseFilters } from '@
 import { Request, Response, NextFunction } from 'express';
 import  {verify}  from 'jsonwebtoken';
 import { TokenPayload } from '../utils/dto/util.dto';
-import { HttpExceptionFilter, UnauthorizedExceptionFilter } from 'src/model/http-exception.filter';
+import { UnauthorizedExceptionFilter } from 'src/model/http-exception.filter';
 
 @Injectable()
 @UseFilters(UnauthorizedExceptionFilter)

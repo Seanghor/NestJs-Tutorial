@@ -3,7 +3,7 @@ import { AuditoriumService } from './auditorium.service';
 import { CreateAuditoriumDto } from './dto/create-auditorium.dto';
 import { UpdateAuditoriumDto } from './dto/update-auditorium.dto';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
-import { Request, Response, NextFunction } from 'express';
+import { Request} from 'express';
 
 
 @Controller('auditorium')

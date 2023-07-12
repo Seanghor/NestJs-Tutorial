@@ -1,5 +1,5 @@
 import { PrismaService } from './../../prisma/prisma.service';
-import { MiddlewareConsumer, Module, NestModule, UnauthorizedException } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { ExcelController, MovieController } from './movie.controller';
 import { HttpExceptionFilter, UnauthorizedExceptionFilter } from 'src/model/http-exception.filter';

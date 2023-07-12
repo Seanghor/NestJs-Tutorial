@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, IsArray, IsBoolean, IsNotEmpty, IsString } from "class-validator"
+import { ArrayNotEmpty, IsArray, IsBoolean, IsNotEmpty } from "class-validator"
 
 export class CreateBookingDto {
   @IsNotEmpty()

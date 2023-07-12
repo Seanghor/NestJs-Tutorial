@@ -1,5 +1,5 @@
 import { SeatStatusEnum } from "@prisma/client";
-import { IsEmpty, IsEnum, IsNotEmpty } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
 
 export class CreateSeatDto {
     @IsNotEmpty()

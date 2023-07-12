@@ -1,5 +1,4 @@
-import { Auditorium } from './../auditorium/entities/auditorium.entity';
-import { Seat } from './../seat/entities/seat.entity';
+
 import { prisma } from './../../../prisma/db';
 import { Injectable } from '@nestjs/common';
 import { CreateScreeningDto } from './dto/create-screening.dto';
@@ -24,7 +23,7 @@ export class ScreeningService {
 
     const maxSeat = auditorium.num_seats
     for (let j = 1; j <= maxSeat; j++) {
-      const seats = await prisma.seat.create({
+      await prisma.seat.create({
         data: {
           customId: `A-${j}`,
           auditoriumId: auditorium.id,

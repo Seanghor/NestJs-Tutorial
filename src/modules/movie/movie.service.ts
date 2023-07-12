@@ -1,5 +1,3 @@
-import { MovieEntity } from 'src/modules/movie/entities/movie.entity';
-import { IsDate } from 'class-validator';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CreateMovieDto, ImportMovieDto } from './dto/create-movie.dto';
 import { Injectable, UseFilters, } from '@nestjs/common';

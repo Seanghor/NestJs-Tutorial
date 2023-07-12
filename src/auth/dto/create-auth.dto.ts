@@ -1,5 +1,4 @@
-import { RoleEnum } from "@prisma/client";
-import { IsEmail, IsEnum, IsNotEmpty } from "class-validator/types/decorator/decorators";
+import { IsNotEmpty } from "class-validator/types/decorator/decorators";
 import { uuidv4 } from 'uuid';
 export class CreateAuthDto {
 

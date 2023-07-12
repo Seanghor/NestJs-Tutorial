@@ -3,7 +3,6 @@ import { SeatService } from './seat.service';
 import { CreateSeatDto } from './dto/create-seat.dto';
 import { HttpExceptionFilter } from 'src/model/http-exception.filter';
 import { AuditoriumService } from '../auditorium/auditorium.service';
-import { SeatStatusEnum } from '@prisma/client';
 import { UpdateSeatStatusDto } from './dto/update-seat.dto';
 import { ScreeningService } from '../screening/screening.service';
 
