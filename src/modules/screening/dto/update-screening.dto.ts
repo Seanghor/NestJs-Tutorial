@@ -15,7 +15,7 @@ export class UpdateScreeningDto extends PartialType(CreateScreeningDto) {
 
     @IsNotEmpty()
     @IsDate()
-    startTime: Date
+    startTime: Date | string
 
     @IsNotEmpty()
     duration_min: number

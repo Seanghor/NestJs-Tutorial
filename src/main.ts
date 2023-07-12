@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Request, Response, NextFunction } from 'express';
+import * as cors from 'cors';
+// import { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,11 @@ async function bootstrap() {
   //     res.status(500).json(err.message);
   //   }
   // });
-  const port = process.env.PORT || 8080;
+
+  // Enable CORS
+  app.use(cors());
+
+  const port = process.env.PORT || 4000;
   await app.listen(port);
   console.log(`Application is running on: ${port}`);
 }

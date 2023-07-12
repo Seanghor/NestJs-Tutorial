@@ -9,7 +9,8 @@ datasource db {
   provider = "postgresql"
   // postgresql://postgres:hor123@localhost:5432/cloud_demo
   // url      = "postgresql://postgres:hor123@localhost:5432/cloud_demo"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_LOCAL")
+  // url      = env("DATABASE_URL_DOCKER")
 }
 
 enum RoleEnum {
@@ -23,10 +24,23 @@ enum GenderEnum {
   FEMALE
 }
 
+enum SeatStatusEnum {
+  AVAILABLE
+  SELECTED
+  OWNED
+}
+
 enum MovieStatusEnum {
   COMING_SOON
   NOW_SHOWING
-  END_SHOWING
+  TOP_MOVIE
+}
+
+enum MovieTypeEnum {
+  ACTION
+  COMEDY
+  HORRO
+  DRAMA
 }
 
 enum ScreeningStatusEnum {
@@ -70,6 +84,8 @@ model Movie {
   id           Int             @id @default(autoincrement())
   title        String          @unique
   image        String?
+  trailer      String?
+  movieType    MovieTypeEnum   @default(ACTION)
   description  String?
   duration_min Int
   rating       Float
@@ -103,10 +119,11 @@ model Screening {
   endTime      DateTime?           @db.Time
   status       ScreeningStatusEnum @default(COMING_SOON)
   isAvailable  Boolean             @default(true)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime?           @updatedAt
   Ticket       Ticket[]
   Booking      Booking[]
+  Seat         Seat[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime?           @updatedAt
 }
 
 model Ticket {
@@ -134,7 +151,6 @@ model Booking {
   screeningId Int
   num         Int
   price_for_1 Int
-  // total       Int?       @default(dbgenerated("(\"num\" * \"price_for_1\")"))
   total       Int?
   tickets     Ticket[]
   payStatus   Boolean   @default(false)
@@ -142,10 +158,12 @@ model Booking {
 }
 
 model Seat {
-  id           Int         @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   customId     String?
-  Auditorium   Auditorium? @relation(fields: [auditoriumId], references: [id])
-  isDisable    Boolean     @default(false)
+  Auditorium   Auditorium?    @relation(fields: [auditoriumId], references: [id])
+  status       SeatStatusEnum @default(AVAILABLE)
   auditoriumId Int?
+  screening    Screening?     @relation(fields: [screeningId], references: [id])
   Ticket       Ticket[]
+  screeningId  Int
 }

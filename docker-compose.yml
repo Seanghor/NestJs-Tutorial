@@ -1,8 +1,8 @@
 version: "3.9"
-name: ccp_web_demo
+name: cloud_computing_web_demo
 
 networks:
-  ccp-network:
+  cloud_computing-network:
     driver: bridge
 
 
@@ -10,19 +10,19 @@ networks:
 services:
   db:
     image: postgres:14.3-alpine
-    container_name: postgres-cloud_demo
+    container_name: postgres_cloud_computing_demo
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: cloud_demo
+      POSTGRES_DB: cloud_computing_demo
     expose:
       - "5433"
     ports:
       - "5433:5433"
     command: -p 5433
     networks:
-      - ccp-network
+      - cloud_computing-network
 
   web:
     image: ccp_web
@@ -34,9 +34,9 @@ services:
     restart: always
     env_file: ./.env
     networks:
-      - ccp-network
+      - cloud_computing-network
     ports:
-      - "3000:${PORT}"
+      - "5000:${PORT}"
     command: yarn start
     depends_on:
       - db

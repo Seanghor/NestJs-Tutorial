@@ -1,5 +1,4 @@
 import { GenderEnum, User, RoleEnum } from "@prisma/client";
-import { IsEnum } from "class-validator";
 import { Exclude } from "class-transformer";
 
 export class UserEntity implements User {

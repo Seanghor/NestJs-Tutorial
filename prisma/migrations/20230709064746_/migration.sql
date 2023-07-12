@@ -5,7 +5,10 @@ CREATE TYPE "RoleEnum" AS ENUM ('ADMIN', 'USER', 'EMPLOYEE');
 CREATE TYPE "GenderEnum" AS ENUM ('MALE', 'FEMALE');
 
 -- CreateEnum
-CREATE TYPE "MovieStatusEnum" AS ENUM ('COMING_SOON', 'NOW_SHOWING', 'END_SHOWING');
+CREATE TYPE "MovieStatusEnum" AS ENUM ('COMING_SOON', 'NOW_SHOWING', 'TOP_MOVIE');
+
+-- CreateEnum
+CREATE TYPE "MovieTypeEnum" AS ENUM ('ACTION', 'COMEDY', 'HORRO', 'DRAMA');
 
 -- CreateEnum
 CREATE TYPE "ScreeningStatusEnum" AS ENUM ('COMING_SOON', 'NOW_SHOWING', 'END_SHOWING');
@@ -52,6 +55,8 @@ CREATE TABLE "Movie" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "image" TEXT,
+    "trailer" TEXT,
+    "movieType" "MovieTypeEnum" NOT NULL DEFAULT 'ACTION',
     "description" TEXT,
     "duration_min" INTEGER NOT NULL,
     "rating" DOUBLE PRECISION NOT NULL,
@@ -95,10 +100,12 @@ CREATE TABLE "Screening" (
 -- CreateTable
 CREATE TABLE "Ticket" (
     "id" SERIAL NOT NULL,
+    "customId" TEXT,
     "screeningId" INTEGER NOT NULL,
-    "seat" TEXT NOT NULL,
+    "seatId" INTEGER,
     "price" DOUBLE PRECISION NOT NULL,
     "active" BOOLEAN NOT NULL,
+    "payStatus" BOOLEAN NOT NULL DEFAULT false,
     "bookingId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
@@ -109,15 +116,27 @@ CREATE TABLE "Ticket" (
 -- CreateTable
 CREATE TABLE "Booking" (
     "id" SERIAL NOT NULL,
+    "customId" TEXT,
     "userId" INTEGER NOT NULL,
     "screeningId" INTEGER NOT NULL,
     "num" INTEGER NOT NULL,
     "price_for_1" INTEGER NOT NULL,
-    "total" INTEGER NOT NULL,
-    "payStatus" BOOLEAN NOT NULL,
+    "total" INTEGER,
+    "payStatus" BOOLEAN NOT NULL DEFAULT false,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Booking_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Seat" (
+    "id" SERIAL NOT NULL,
+    "customId" TEXT,
+    "isDisable" BOOLEAN NOT NULL DEFAULT false,
+    "auditoriumId" INTEGER,
+    "screeningId" INTEGER NOT NULL,
+
+    CONSTRAINT "Seat_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -135,6 +154,9 @@ CREATE UNIQUE INDEX "Movie_title_key" ON "Movie"("title");
 -- CreateIndex
 CREATE UNIQUE INDEX "Auditorium_name_key" ON "Auditorium"("name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Ticket_customId_key" ON "Ticket"("customId");
+
 -- AddForeignKey
 ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -148,10 +170,19 @@ ALTER TABLE "Screening" ADD CONSTRAINT "Screening_auditoriumId_fkey" FOREIGN KEY
 ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_screeningId_fkey" FOREIGN KEY ("screeningId") REFERENCES "Screening"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_seatId_fkey" FOREIGN KEY ("seatId") REFERENCES "Seat"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_screeningId_fkey" FOREIGN KEY ("screeningId") REFERENCES "Screening"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Seat" ADD CONSTRAINT "Seat_auditoriumId_fkey" FOREIGN KEY ("auditoriumId") REFERENCES "Auditorium"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Seat" ADD CONSTRAINT "Seat_screeningId_fkey" FOREIGN KEY ("screeningId") REFERENCES "Screening"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

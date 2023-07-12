@@ -1,14 +1,11 @@
-import { IsAuthService } from './../../middlewares/middlewares.service';
-
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseFilters, UseInterceptors, Req, Res, Next, UseGuards } from '@nestjs/common/decorators';
+import { Controller, Get, Post, Body, Param, Delete, Query, UseFilters, UseInterceptors, Req } from '@nestjs/common/decorators';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { GenderEnum, RoleEnum } from '@prisma/client';
 import { HttpExceptionFilter, } from 'src/model/http-exception.filter';
-import { BadRequestException, ClassSerializerInterceptor, MiddlewareConsumer, NestModule, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { SerializeUser, UserEntity } from './entities/user.entity';
-import { Request, Response, NextFunction } from 'express';
+import { BadRequestException, ClassSerializerInterceptor, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { UserEntity } from './entities/user.entity';
+import { Request } from 'express';
 // import { IsAuthMiddleware } from 'src/middlewares/middlewares.service';
 
 

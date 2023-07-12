@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable, UseFilters } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { GenderEnum, RoleEnum } from '@prisma/client';
-import { HttpExceptionFilter } from 'src/model/http-exception.filter';
 import { JwtService } from 'src/utils/jwt';
 
 @Injectable()
