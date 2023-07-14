@@ -16,6 +16,9 @@ export class UpdateMovieDto extends PartialType(CreateMovieDto) {
     trailer: string | null;
     movieType: MovieTypeEnum;
 
+    @IsEmpty()
+    sub_title: string;
+
     @IsNotEmpty()
     duration_min: number
 

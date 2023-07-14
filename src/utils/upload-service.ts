@@ -103,6 +103,7 @@ export class ExcelService {
           status: getCellValue(row, 8) as MovieStatusEnum, // (YYY-MM-DD)
           movieType: getCellValue(row, 9) as MovieTypeEnum,
           trailer: trailerObject?.hyperlink || imageObject?.text,
+          sub_title: getCellValue(row, 11).toString(),
         } as MovieImportEntity
       })
   }

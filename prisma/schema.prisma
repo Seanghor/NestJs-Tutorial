@@ -50,10 +50,12 @@ enum ScreeningStatusEnum {
 }
 
 model Campus {
-  id      Int    @id @default(autoincrement())
-  name    String @unique
-  address String
-  phone   String
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  address   String
+  phone     String
+  map       String?
+  Screening Screening[]
 }
 
 model RefreshToken {
@@ -85,6 +87,7 @@ model Movie {
   title        String          @unique
   image        String?
   trailer      String?
+  sub_title    String?         @default("EN/KH")
   movieType    MovieTypeEnum   @default(ACTION)
   description  String?
   duration_min Int
@@ -111,6 +114,8 @@ model Screening {
   id           Int                 @id @default(autoincrement())
   movie        Movie               @relation(fields: [movieId], references: [id], onDelete: Cascade)
   auditorium   Auditorium?         @relation(fields: [auditoriumId], references: [id], onDelete: SetNull)
+  campus       Campus              @relation(fields: [campusId], references: [id])
+  campusId     Int
   movieId      Int
   auditoriumId Int?
   date_show    DateTime

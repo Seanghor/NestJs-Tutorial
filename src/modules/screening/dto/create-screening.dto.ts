@@ -6,6 +6,9 @@ export class CreateScreeningDto {
     movieId: number
 
     @IsNotEmpty()
+    campusId: number
+
+    @IsNotEmpty()
     auditoriumId: number
 
     @IsNotEmpty()
@@ -13,7 +16,7 @@ export class CreateScreeningDto {
 
     @IsNotEmpty()
     duration_min: number
-    
+
     @IsNotEmpty()
     @IsDate()
     startTime: Date | string

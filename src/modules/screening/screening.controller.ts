@@ -55,12 +55,7 @@ export class ScreeningController {
     if (!['ADMIN', 'EMPLOYEE', 'USER'].includes(user.role)) {
       throw new UnauthorizedException('🚫 User is Un-Authorized 🚫')
     }
-    // if (title) {
-    //   const existingTitle = await this.movieService.findMovieByTitle(title)
-    //   if (!existingTitle) {
-    //     throw new BadRequestException('Invalid title')
-    //   }
-    // }
+
     const res = await this.screeningService.findAll(movie)
     if (movie && res.length === 0) {
       throw new BadRequestException()

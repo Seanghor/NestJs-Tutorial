@@ -7,6 +7,7 @@ export class MovieEntity implements Movie {
     trailer: string | null;
     movieType: MovieTypeEnum;
     image: string;
+    sub_title: string;
     description: string;
     duration_min: number;
     rating: number;
@@ -24,6 +25,7 @@ export class MovieImportEntity {
     id: number;
     title: string;
     image: string;
+    sub_title: string;
     trailer: string | null;
     movieType: MovieTypeEnum;
     description: string;
