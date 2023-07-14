@@ -50,19 +50,39 @@ export class ScreeningController {
 
   @UseFilters(HttpExceptionFilter)
   @Get()
-  async findAll(@Req() req: Request, @Query('movie') movie?: string) {
+  async findAll(@Req() req: Request, @Query('movie') movie?: string, @Query('groupBy') groupBy?: string, @Query('date') date?: string) {
+    const user = req.payload
+    if (!['ADMIN', 'EMPLOYEE', 'USER'].includes(user.role)) {
+      throw new UnauthorizedException('🚫 User is Un-Authorized 🚫')
+    }
+    if (groupBy && !['cinema', 'date'].includes(groupBy)) {
+      throw new BadRequestException('status not found ')
+    }
+
+    const res = await this.screeningService.findAll(movie, groupBy, date)
+    if (movie && res.length === 0) {
+      throw new BadRequestException()
+    }
+    return res
+  }
+
+
+  @UseFilters(HttpExceptionFilter)
+  @Get('/distinct')
+  async findDistinct(@Req() req: Request, @Query('movieId') movieId: string, @Query('date') date?: string) {
     const user = req.payload
     if (!['ADMIN', 'EMPLOYEE', 'USER'].includes(user.role)) {
       throw new UnauthorizedException('🚫 User is Un-Authorized 🚫')
     }
 
-    const res = await this.screeningService.findAll(movie)
-    if (movie && res.length === 0) {
-      throw new BadRequestException()
-    }
-    return res
+    const dateFormat = `${date}T00:00:00.000Z`
+    console.log("Date input:", date);
 
+    const res = await this.screeningService.findDistinct(+movieId, date)
+
+    return res
   }
+
 
   @UseFilters(HttpExceptionFilter)
   @Get(':id')

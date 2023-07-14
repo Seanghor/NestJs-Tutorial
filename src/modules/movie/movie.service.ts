@@ -1,3 +1,4 @@
+import { Screening } from './../screening/entities/screening.entity';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CreateMovieDto, ImportMovieDto } from './dto/create-movie.dto';
 import { Injectable, UseFilters, } from '@nestjs/common';
@@ -33,8 +34,8 @@ export class MovieService {
   }
 
   // findMany
-  async findAllMovie(title?: string, status?: MovieStatusEnum) {
-    if (title && !status) {
+  async findAllMovie(title?: string, status?: MovieStatusEnum, onscreening?: Boolean) {
+    if (title && !status && !onscreening) {
       const titleLower = title.toLocaleLowerCase()
       const res = await this.prisma.movie.findMany({
         where: {
@@ -43,7 +44,7 @@ export class MovieService {
       })
       return res
     }
-    else if (!title && status) {
+    else if (!title && status && !onscreening) {
       const res = await this.prisma.movie.findMany({
         where: {
           status: status.toLocaleUpperCase() as MovieStatusEnum
@@ -51,7 +52,7 @@ export class MovieService {
       })
       return res
     }
-    else if (title && status) {
+    else if (title && status && !onscreening) {
       const titleLower = title.toLocaleLowerCase()
       const res = await this.prisma.movie.findMany({
         where: {
@@ -63,6 +64,22 @@ export class MovieService {
       })
       return res
     }
+    else if (!title && !status && onscreening === true) {
+      console.log("onscreening value:", onscreening);
+
+      const res = await this.prisma.movie.findMany({
+        where: {
+          Screening: {
+            some: {
+
+            },
+          },
+        }
+      })
+      return res
+    }
+    console.log("dfsfsfsf");
+    
     const res = await this.prisma.movie.findMany()
     return res
   }
@@ -105,8 +122,8 @@ export class MovieService {
       data: file,
       skipDuplicates: true
     })
-  return createdMovies
-}
+    return createdMovies
+  }
 }
 
 

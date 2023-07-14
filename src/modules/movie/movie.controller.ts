@@ -41,11 +41,15 @@ export class MovieController {
   @UseFilters(HttpExceptionFilter)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAllMovies(@Query('title') title?: string, @Query('status') status?: MovieStatusEnum) {
+  async findAllMovies(@Query('title') title?: string, @Query('status') status?: MovieStatusEnum, @Query('onscreening') onscreening?: string) {
     if (status && !Object.values(MovieStatusEnum).includes(status.toLocaleUpperCase() as MovieStatusEnum)) {
       throw new BadRequestException('Status not valid')
     }
-    const movies = await this.movieService.findAllMovie(title, status);
+
+    // convert string to Boolean
+    const bol = onscreening ? JSON.parse(onscreening) : false
+
+    const movies = await this.movieService.findAllMovie(title, status, bol);
     return movies.map(movie => new MovieEntity(movie))
   }
 
